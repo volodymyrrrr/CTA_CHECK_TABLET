@@ -64,11 +64,11 @@ def test_cicle(driver, ):
                         driver.execute_script("scrollBy(0,550);")
                         try:
                             Wait(driver, timeout=5).until(EC.presence_of_element_located((By.CLASS_NAME, cta)))
-                            wb1.update_cell(row=r, col=9, value="Pass")
+                            wb1.update_cell(row=r, col=10, value="Pass")
                         except:
-                            wb1.update_cell(row=r, col=9, value="false")
+                            wb1.update_cell(row=r, col=10, value="false")
                     except:
-                        wb1.update_cell(row=r, col=9, value="Popup_error")
+                        wb1.update_cell(row=r, col=10, value="Popup_error")
                 except:
-                    wb1.update_cell(row=r, col=9, value="Load_error")
+                    wb1.update_cell(row=r, col=10, value="Load_error")
     driver.close()
