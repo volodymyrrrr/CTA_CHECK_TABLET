@@ -24,7 +24,7 @@ else:
 
 with open("links.csv", "w", newline='') as file:
     writer = csv.writer(file, delimiter=";")
-    writer.writerow(("links", "tangiblee", "number", "popup", "Skip", "useragent"))
+    writer.writerow(("links", "tangiblee", "number", "popup", "second_popup", "Skip", "useragent"))
 for urls in URLS:
     with open("links.csv", 'a', newline='') as file:
         writer = csv.writer(file, delimiter=";")
@@ -41,6 +41,7 @@ def test_cicle(driver, ):
             url = line["links"]
             r = line["number"]
             popup = line["popup"]
+            popup2 = line["second_popup"]
             skip = line["Skip"]
             useragent = line["useragent"]
             if skip == 'TRUE':
@@ -53,22 +54,25 @@ def test_cicle(driver, ):
                 options.add_argument("window-size=820,1180")
                 options.add_argument("--headless")
                 driver = webdriver.Chrome(service=driver_service, options=options)
-                driver.maximize_window()
                 driver.delete_all_cookies()
-
                 try:
                     driver.get(url)
                     time.sleep(5)
                     try:
                         driver.find_element(By.XPATH, popup).click()
                         driver.execute_script("scrollBy(0,550);")
+                        time.sleep(5)
                         try:
-                            Wait(driver, timeout=5).until(EC.presence_of_element_located((By.CLASS_NAME, cta)))
-                            wb1.update_cell(row=r, col=10, value="Pass")
+                            driver.find_element(By.XPATH, popup2).click()
+                            try:
+                                Wait(driver, timeout=5).until(EC.presence_of_element_located((By.CLASS_NAME, cta)))
+                                wb1.update_cell(row=r, col=11, value="Pass")
+                            except:
+                                wb1.update_cell(row=r, col=11, value="false")
                         except:
-                            wb1.update_cell(row=r, col=10, value="false")
+                            wb1.update_cell(row=r, col=11, value="Popup_error")
                     except:
-                        wb1.update_cell(row=r, col=10, value="Popup_error")
+                        wb1.update_cell(row=r, col=11, value="Popup_error")
                 except:
-                    wb1.update_cell(row=r, col=10, value="Load_error")
+                    wb1.update_cell(row=r, col=11, value="Load_error")
     driver.close()
